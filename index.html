@@ -128,13 +128,16 @@ nav.scrolled {
 }
 .nav-cta:hover { background: var(--surface-2); border-color: var(--accent); }
 .burger {
-  display: none; flex-direction: column; gap: 5px; padding: 10px;
-  min-width: 44px; min-height: 44px; align-items: center; justify-content: center;
+  -webkit-appearance: none; appearance: none;
+  display: none; flex-direction: column; gap: 5px;
+  width: 44px; height: 44px; flex: 0 0 44px;
+  align-items: center; justify-content: center;
   position: relative; z-index: 1001;
 }
 .burger span {
-  display: block; width: 24px; height: 2px; background: var(--text);
+  display: block; width: 22px; height: 2px; background: var(--text);
   border-radius: 2px; transition: transform 0.3s ease, opacity 0.3s ease;
+  flex-shrink: 0;
 }
 .burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .burger.open span:nth-child(2) { opacity: 0; }
@@ -205,10 +208,12 @@ nav.scrolled {
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 .hero-name {
   font-family: var(--font-display);
-  font-size: clamp(2.8rem, 6vw, 5.5rem);
-  font-weight: 800; line-height: 1.05;
+  font-size: clamp(2.2rem, 6vw, 5.5rem);
+  font-weight: 800; line-height: 1.15;
   letter-spacing: -0.03em;
   margin-bottom: 1rem;
+  overflow-wrap: break-word;
+  padding-right: 0.05em;
 }
 .hero-name span { display: block; }
 .hero-name .first { color: var(--text); }
@@ -1378,9 +1383,16 @@ const loadInterval = setInterval(() => {
   if (progress >= 100) { progress = 100; clearInterval(loadInterval); }
   loaderBar.style.width = progress + '%';
 }, 60);
-window.addEventListener('load', () => {
-  setTimeout(() => { loader.classList.add('hidden'); }, 400);
-});
+let loaderHidden = false;
+function hideLoader() {
+  if (loaderHidden) return;
+  loaderHidden = true;
+  loader.classList.add('hidden');
+}
+window.addEventListener('load', () => { setTimeout(hideLoader, 400); });
+// Failsafe: never let the loader block the page (e.g. if a font or other
+// resource is slow/blocked by the network, 'load' may fire late or not at all).
+setTimeout(hideLoader, 2500);
 
 /* ==============================
    SCROLL PROGRESS
