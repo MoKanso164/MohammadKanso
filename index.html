@@ -144,23 +144,32 @@ nav.scrolled {
 .burger.open span:nth-child(2) { opacity: 0; }
 .burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* MOBILE NAV OVERLAY */
+/* MOBILE NAV BACKDROP */
+.mobile-nav-backdrop {
+  position: fixed; inset: 0; background: rgba(5,5,8,0.6);
+  z-index: 1000;
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.mobile-nav-backdrop.open { opacity: 1; visibility: visible; }
+
+/* MOBILE NAV SIDEBAR */
 .mobile-nav {
-  position: fixed; inset: 0; background: rgba(5,5,8,0.97);
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: min(300px, 80vw);
+  background: rgba(10,10,16,0.98);
   backdrop-filter: blur(20px);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 2.5rem; z-index: 1001;
-  opacity: 0; visibility: hidden; transform: translateY(-20px);
-  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-  overflow-y: auto; padding: 5rem 1.5rem 3rem;
+  border-left: 1px solid var(--border-2);
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;
+  gap: 0.5rem; z-index: 1001;
+  transform: translateX(100%); visibility: hidden;
+  transition: transform 0.3s ease, visibility 0.3s ease;
+  overflow-y: auto; padding: calc(var(--nav-h) + 1.5rem) 1.5rem 2rem;
+  box-shadow: -20px 0 60px rgba(0,0,0,0.4);
 }
-.mobile-nav.open { opacity: 1; visibility: visible; transform: translateY(0); }
-.mobile-nav a { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--text-2); transition: color 0.2s; padding: 0.25rem; }
+.mobile-nav.open { transform: translateX(0); visibility: visible; }
+.mobile-nav a { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: var(--text-2); transition: color 0.2s; padding: 0.6rem 0; width: 100%; }
 .mobile-nav a:hover { color: var(--text); }
-@media (max-height: 500px) {
-  .mobile-nav { gap: 1.25rem; justify-content: flex-start; }
-  .mobile-nav a { font-size: 1.4rem; }
-}
 
 /* ==============================
    PARTICLE CANVAS
@@ -728,6 +737,7 @@ footer {
 </button>
 
 <!-- MOBILE NAV -->
+<div class="mobile-nav-backdrop" id="mobile-nav-backdrop"></div>
 <nav class="mobile-nav" id="mobile-nav" aria-hidden="true">
   <a href="#about" class="mobile-link">About</a>
   <a href="#focus" class="mobile-link">Focus</a>
@@ -1416,20 +1426,21 @@ window.addEventListener('scroll', () => {
 ================================ */
 const burger = document.getElementById('burger');
 const mobileNav = document.getElementById('mobile-nav');
-burger.addEventListener('click', () => {
-  const open = burger.classList.toggle('open');
+const mobileNavBackdrop = document.getElementById('mobile-nav-backdrop');
+function setMenuOpen(open) {
+  burger.classList.toggle('open', open);
   mobileNav.classList.toggle('open', open);
+  mobileNavBackdrop.classList.toggle('open', open);
   mobileNav.setAttribute('aria-hidden', !open);
   burger.setAttribute('aria-expanded', open);
   document.body.style.overflow = open ? 'hidden' : '';
+}
+burger.addEventListener('click', () => {
+  setMenuOpen(!burger.classList.contains('open'));
 });
+mobileNavBackdrop.addEventListener('click', () => setMenuOpen(false));
 document.querySelectorAll('.mobile-link').forEach(a => {
-  a.addEventListener('click', () => {
-    burger.classList.remove('open');
-    mobileNav.classList.remove('open');
-    mobileNav.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-  });
+  a.addEventListener('click', () => setMenuOpen(false));
 });
 
 /* ==============================
