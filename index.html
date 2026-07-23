@@ -46,13 +46,15 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; font-size: 16px; }
+html { scroll-behavior: smooth; font-size: 16px; overflow-x: hidden; width: 100%; }
 body {
   font-family: var(--font-body);
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
   overflow-x: hidden;
+  width: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
@@ -126,7 +128,8 @@ nav.scrolled {
 }
 .nav-cta:hover { background: var(--surface-2); border-color: var(--accent); }
 .burger {
-  display: none; flex-direction: column; gap: 5px; padding: 8px;
+  display: none; flex-direction: column; gap: 5px; padding: 10px;
+  min-width: 44px; min-height: 44px; align-items: center; justify-content: center;
   position: relative; z-index: 1001;
 }
 .burger span {
@@ -145,10 +148,15 @@ nav.scrolled {
   gap: 2.5rem; z-index: 999;
   opacity: 0; visibility: hidden; transform: translateY(-20px);
   transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  overflow-y: auto; padding: 5rem 1.5rem 3rem;
 }
 .mobile-nav.open { opacity: 1; visibility: visible; transform: translateY(0); }
-.mobile-nav a { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--text-2); transition: color 0.2s; }
+.mobile-nav a { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--text-2); transition: color 0.2s; padding: 0.25rem; }
 .mobile-nav a:hover { color: var(--text); }
+@media (max-height: 500px) {
+  .mobile-nav { gap: 1.25rem; justify-content: flex-start; }
+  .mobile-nav a { font-size: 1.4rem; }
+}
 
 /* ==============================
    PARTICLE CANVAS
@@ -160,9 +168,11 @@ nav.scrolled {
 ================================ */
 .hero {
   position: relative; min-height: 100vh;
+  min-height: 100svh;
   display: flex; align-items: center; justify-content: center;
   padding: calc(var(--nav-h) + 2rem) clamp(1rem, 4vw, 3rem) 4rem;
   overflow: hidden;
+  width: 100%;
 }
 .hero-bg-gradient {
   position: absolute; inset: 0; z-index: 1;
@@ -207,12 +217,13 @@ nav.scrolled {
   -webkit-text-fill-color: transparent; background-clip: text;
 }
 .hero-typing-wrap {
-  font-family: var(--font-mono); font-size: clamp(1rem, 2vw, 1.25rem);
-  color: var(--cyan); margin-bottom: 1.5rem; height: 1.8em;
+  font-family: var(--font-mono); font-size: clamp(0.85rem, 2vw, 1.25rem);
+  color: var(--cyan); margin-bottom: 1.5rem; min-height: 1.8em;
   display: flex; align-items: center; gap: 0.5rem;
+  flex-wrap: wrap; max-width: 100%;
 }
-.hero-typing-prefix { color: var(--text-3); }
-.typing-text { position: relative; }
+.hero-typing-prefix { color: var(--text-3); flex-shrink: 0; }
+.typing-text { position: relative; word-break: break-word; }
 .typing-cursor {
   display: inline-block; width: 2px; height: 1em;
   background: var(--cyan); margin-left: 2px;
@@ -640,6 +651,10 @@ footer {
   .footer-inner { flex-direction: column; align-items: flex-start; }
   .about-stats { grid-template-columns: 1fr 1fr; }
   .projects-grid { grid-template-columns: 1fr; }
+  .form-input, .form-textarea { font-size: 16px; }
+  .social-icon { width: 44px; height: 44px; }
+  #scroll-top { bottom: 1.25rem; right: 1.25rem; width: 44px; height: 44px; }
+  .contact-item { min-height: 44px; }
 }
 @media (max-width: 480px) {
   .focus-grid { grid-template-columns: 1fr; }
@@ -650,6 +665,9 @@ footer {
   .timeline { padding-left: 1.25rem; }
   .timeline-item { padding-left: 1.75rem; }
   .timeline-dot { left: -1.75rem; }
+  .project-footer { flex-direction: column; }
+  .project-footer a { width: 100%; text-align: center; padding: 0.7rem 1rem !important; }
+  .contact-form #form-btn { width: 100%; }
 }
 @media (max-width: 380px) {
   .nav-logo { font-size: 1.05rem; max-width: 58vw; }
