@@ -132,7 +132,8 @@ nav.scrolled {
   display: none; flex-direction: column; gap: 5px;
   width: 44px; height: 44px; flex: 0 0 44px;
   align-items: center; justify-content: center;
-  position: relative; z-index: 1001;
+  position: fixed; top: calc((var(--nav-h) - 44px) / 2); right: clamp(1rem, 4vw, 3rem);
+  z-index: 1002;
 }
 .burger span {
   display: block; width: 22px; height: 2px; background: var(--text);
@@ -148,7 +149,7 @@ nav.scrolled {
   position: fixed; inset: 0; background: rgba(5,5,8,0.97);
   backdrop-filter: blur(20px);
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 2.5rem; z-index: 999;
+  gap: 2.5rem; z-index: 1001;
   opacity: 0; visibility: hidden; transform: translateY(-20px);
   transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
   overflow-y: auto; padding: 5rem 1.5rem 3rem;
@@ -715,11 +716,16 @@ footer {
       <li><a href="#journey">Journey</a></li>
       <li><a href="#contact" class="nav-cta">Contact Me</a></li>
     </ul>
-    <button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
   </div>
 </nav>
+
+<!-- Burger lives outside <nav> on purpose: it must stay above the mobile
+     menu overlay, which in turn must stay above the navbar. Keeping it as
+     a fixed sibling avoids it being trapped inside the navbar's own
+     stacking context. -->
+<button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
 
 <!-- MOBILE NAV -->
 <nav class="mobile-nav" id="mobile-nav" aria-hidden="true">
