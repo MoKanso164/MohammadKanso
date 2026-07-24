@@ -127,49 +127,135 @@ nav.scrolled {
   transition: background 0.2s, border-color 0.2s;
 }
 .nav-cta:hover { background: var(--surface-2); border-color: var(--accent); }
-.burger {
+/* ==============================
+   PREMIUM MOBILE MENU
+================================ */
+.menu-btn {
   -webkit-appearance: none; appearance: none;
-  display: none; flex-direction: column; gap: 5px;
-  width: 44px; height: 44px; flex: 0 0 44px;
-  align-items: center; justify-content: center;
-  position: fixed; top: calc((var(--nav-h) - 44px) / 2); right: clamp(1rem, 4vw, 3rem);
-  z-index: 1002;
+  display: none; align-items: center; justify-content: center;
+  width: 46px; height: 46px; flex: 0 0 46px;
+  position: fixed; top: calc((var(--nav-h) - 46px) / 2); right: clamp(1rem, 4vw, 3rem);
+  z-index: 1101;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
 }
-.burger span {
-  display: block; width: 22px; height: 2px; background: var(--text);
-  border-radius: 2px; transition: transform 0.3s ease, opacity 0.3s ease;
-  flex-shrink: 0;
+.menu-btn:active { transform: scale(0.94); }
+.menu-btn.open { background: var(--surface-2); border-color: var(--accent); }
+.menu-btn-box {
+  position: relative; width: 20px; height: 14px;
+  display: flex; align-items: center; justify-content: center;
 }
-.burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.burger.open span:nth-child(2) { opacity: 0; }
-.burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.menu-btn-line {
+  position: absolute; left: 0; width: 100%; height: 2px; border-radius: 2px;
+  background: var(--text);
+  transition: transform 0.3s cubic-bezier(.65,0,.35,1), opacity 0.2s ease, top 0.3s cubic-bezier(.65,0,.35,1), width 0.25s ease;
+}
+.menu-btn-line:nth-child(1) { top: 0; }
+.menu-btn-line:nth-child(2) { top: 6px; width: 70%; }
+.menu-btn-line:nth-child(3) { top: 12px; }
+.menu-btn.open .menu-btn-line:nth-child(1) { top: 6px; transform: rotate(45deg); }
+.menu-btn.open .menu-btn-line:nth-child(2) { opacity: 0; width: 0; }
+.menu-btn.open .menu-btn-line:nth-child(3) { top: 6px; transform: rotate(-45deg); }
 
-/* MOBILE NAV BACKDROP */
-.mobile-nav-backdrop {
-  position: fixed; inset: 0; background: rgba(5,5,8,0.6);
-  z-index: 1000;
+/* Full-screen premium overlay menu */
+.mobile-menu {
+  position: fixed; inset: 0; z-index: 1100;
+  height: 100vh; height: 100dvh;
+  display: flex; flex-direction: column;
+  background: rgba(6,6,11,0.88);
+  backdrop-filter: blur(28px) saturate(140%);
+  -webkit-backdrop-filter: blur(28px) saturate(140%);
   opacity: 0; visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transform: scale(1.03);
+  transition: opacity 0.4s cubic-bezier(.65,0,.35,1), visibility 0.4s, transform 0.45s cubic-bezier(.65,0,.35,1);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
-.mobile-nav-backdrop.open { opacity: 1; visibility: visible; }
-
-/* MOBILE NAV SIDEBAR */
-.mobile-nav {
-  position: fixed; top: 0; right: 0; bottom: 0;
-  width: min(300px, 80vw);
-  background: rgba(10,10,16,0.98);
-  backdrop-filter: blur(20px);
-  border-left: 1px solid var(--border-2);
-  display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;
-  gap: 0.5rem; z-index: 1001;
-  transform: translateX(100%); visibility: hidden;
-  transition: transform 0.3s ease, visibility 0.3s ease;
-  overflow-y: auto; padding: calc(var(--nav-h) + 1.5rem) 1.5rem 2rem;
-  box-shadow: -20px 0 60px rgba(0,0,0,0.4);
+.mobile-menu.open { opacity: 1; visibility: visible; transform: scale(1); }
+.mobile-menu-bg {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 50% at 85% 8%, rgba(124,92,252,0.16) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 10% 95%, rgba(0,229,204,0.10) 0%, transparent 60%);
 }
-.mobile-nav.open { transform: translateX(0); visibility: visible; }
-.mobile-nav a { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: var(--text-2); transition: color 0.2s; padding: 0.6rem 0; width: 100%; }
-.mobile-nav a:hover { color: var(--text); }
+.mobile-menu-inner {
+  position: relative; z-index: 1;
+  flex: 1; min-height: 0;
+  display: flex; flex-direction: column;
+  padding: max(env(safe-area-inset-top), 1.25rem) clamp(1.25rem, 6vw, 2.5rem) max(env(safe-area-inset-bottom), 1.25rem);
+}
+.mobile-menu-top {
+  display: flex; align-items: center; height: var(--nav-h); flex-shrink: 0;
+}
+.mobile-menu-logo {
+  font-family: var(--font-display); font-weight: 800; font-size: 1.1rem;
+  background: var(--grad-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  letter-spacing: -0.02em;
+}
+.mobile-menu-links {
+  flex-shrink: 0;
+  display: flex; flex-direction: column;
+  gap: clamp(0.15rem, 1.2vh, 0.5rem);
+  padding: clamp(0.5rem, 2vh, 1.5rem) 0;
+}
+.mobile-menu-link {
+  display: flex; align-items: baseline; gap: 0.9rem;
+  padding: clamp(0.3rem, 1.2vh, 0.55rem) 0;
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 0.5s ease, transform 0.5s ease, color 0.2s ease;
+  transition-delay: 0s;
+  border-bottom: 1px solid transparent;
+}
+.mobile-menu.open .mobile-menu-link {
+  opacity: 1; transform: translateY(0);
+  transition-delay: calc(var(--i) * 0.055s + 0.1s);
+}
+.mobile-menu-link:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 6px; border-radius: 4px;
+}
+.mml-num {
+  font-family: var(--font-mono); font-size: 0.8rem; font-weight: 500;
+  color: var(--text-3); min-width: 1.6em; flex-shrink: 0;
+}
+.mml-label {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(1.35rem, 6.5vw, 2.3rem);
+  line-height: 1.15; letter-spacing: -0.02em;
+  color: var(--text-2);
+  transition: color 0.25s ease;
+}
+.mobile-menu-link:active .mml-label { color: var(--text); }
+.mobile-menu-link.touch-active .mml-label {
+  background: var(--grad-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.mobile-menu-link.touch-active .mml-num { color: var(--accent-2); }
+.mobile-menu-link--cta { margin-top: 0.5rem; }
+.mobile-menu-link--cta .mml-label {
+  background: var(--grad-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.mobile-menu-footer {
+  flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; flex-wrap: wrap;
+  margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border);
+  opacity: 0; transform: translateY(12px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition-delay: 0s;
+}
+.mobile-menu.open .mobile-menu-footer { opacity: 1; transform: translateY(0); transition-delay: 0.45s; }
+.mobile-menu-socials { display: flex; gap: 0.75rem; }
+.mobile-menu-email {
+  font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-3);
+  word-break: break-all;
+}
+@media (max-height: 700px) {
+  .mml-label { font-size: clamp(1.2rem, 6vw, 1.8rem); }
+  .mobile-menu-top { height: calc(var(--nav-h) - 16px); }
+}
+@media (max-height: 560px) {
+  .mobile-menu-footer { display: none; }
+}
 
 /* ==============================
    PARTICLE CANVAS
@@ -660,7 +746,7 @@ footer {
 @media (max-width: 768px) {
   :root { --nav-h: 64px; }
   .nav-links { display: none; }
-  .burger { display: flex; }
+  .menu-btn { display: flex; }
   .hero-btns { flex-direction: column; align-items: flex-start; }
   .form-row { grid-template-columns: 1fr; }
   .footer-inner { flex-direction: column; align-items: flex-start; }
@@ -716,8 +802,8 @@ footer {
 <!-- NAVIGATION -->
 <nav id="navbar">
   <div class="nav-inner">
-    <a href="#" class="nav-logo">Mohammad Kanso</a>
     <ul class="nav-links" role="list">
+           <a href="#" class="nav-logo">Mohammad Kanso</a>
       <li><a href="#about">About</a></li>
       <li><a href="#focus">Focus</a></li>
       <li><a href="#skills">Skills</a></li>
@@ -728,24 +814,49 @@ footer {
   </div>
 </nav>
 
-<!-- Burger lives outside <nav> on purpose: it must stay above the mobile
-     menu overlay, which in turn must stay above the navbar. Keeping it as
-     a fixed sibling avoids it being trapped inside the navbar's own
+<!-- Menu button lives outside <nav> on purpose: it must stay above the
+     mobile menu overlay, which in turn must stay above the navbar. Keeping
+     it as a fixed sibling avoids it being trapped inside the navbar's own
      stacking context. -->
-<button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false">
-  <span></span><span></span><span></span>
+<button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+  <span class="menu-btn-box">
+    <span class="menu-btn-line"></span>
+    <span class="menu-btn-line"></span>
+    <span class="menu-btn-line"></span>
+  </span>
 </button>
 
-<!-- MOBILE NAV -->
-<div class="mobile-nav-backdrop" id="mobile-nav-backdrop"></div>
-<nav class="mobile-nav" id="mobile-nav" aria-hidden="true">
-  <a href="#about" class="mobile-link">About</a>
-  <a href="#focus" class="mobile-link">Focus</a>
-  <a href="#skills" class="mobile-link">Skills</a>
-  <a href="#projects" class="mobile-link">Projects</a>
-  <a href="#journey" class="mobile-link">Journey</a>
-  <a href="#contact" class="mobile-link">Contact</a>
-</nav>
+<!-- PREMIUM FULL-SCREEN MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Mobile navigation">
+  <div class="mobile-menu-bg"></div>
+  <div class="mobile-menu-inner">
+    <div class="mobile-menu-top">
+      <span class="mobile-menu-logo">Mohammad Kanso</span>
+    </div>
+    <nav class="mobile-menu-links" aria-label="Primary">
+      <a href="#about" class="mobile-menu-link" style="--i:0"><span class="mml-num">01</span><span class="mml-label">About</span></a>
+      <a href="#focus" class="mobile-menu-link" style="--i:1"><span class="mml-num">02</span><span class="mml-label">Focus</span></a>
+      <a href="#skills" class="mobile-menu-link" style="--i:2"><span class="mml-num">03</span><span class="mml-label">Skills</span></a>
+      <a href="#projects" class="mobile-menu-link" style="--i:3"><span class="mml-num">04</span><span class="mml-label">Projects</span></a>
+      <a href="#journey" class="mobile-menu-link" style="--i:4"><span class="mml-num">05</span><span class="mml-label">Journey</span></a>
+      <a href="#contact" class="mobile-menu-link mobile-menu-link--cta" style="--i:5"><span class="mml-num">06</span><span class="mml-label">Contact Me</span></a>
+    </nav>
+    <div class="mobile-menu-footer">
+      <div class="mobile-menu-socials">
+        <a href="https://github.com/MoKanso164" target="_blank" rel="noopener" class="social-icon" aria-label="GitHub">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/in/mohamad-kanso-1016743aa?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener" class="social-icon" aria-label="LinkedIn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+        <a href="mailto:mohammad.kanso.cs@gmail.com" class="social-icon" aria-label="Email">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </a>
+      </div>
+      <a href="mailto:mohammad.kanso.cs@gmail.com" class="mobile-menu-email">mohammad.kanso.cs@gmail.com</a>
+    </div>
+  </div>
+</div>
 
 <!-- ==============================
      HERO SECTION
@@ -1422,26 +1533,82 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 /* ==============================
-   BURGER MENU
+   PREMIUM MOBILE MENU
 ================================ */
-const burger = document.getElementById('burger');
-const mobileNav = document.getElementById('mobile-nav');
-const mobileNavBackdrop = document.getElementById('mobile-nav-backdrop');
-function setMenuOpen(open) {
-  burger.classList.toggle('open', open);
-  mobileNav.classList.toggle('open', open);
-  mobileNavBackdrop.classList.toggle('open', open);
-  mobileNav.setAttribute('aria-hidden', !open);
-  burger.setAttribute('aria-expanded', open);
-  document.body.style.overflow = open ? 'hidden' : '';
-}
-burger.addEventListener('click', () => {
-  setMenuOpen(!burger.classList.contains('open'));
-});
-mobileNavBackdrop.addEventListener('click', () => setMenuOpen(false));
-document.querySelectorAll('.mobile-link').forEach(a => {
-  a.addEventListener('click', () => setMenuOpen(false));
-});
+(function() {
+  const menuBtn = document.getElementById('menuBtn');
+  const menu = document.getElementById('mobile-menu');
+  const links = Array.from(menu.querySelectorAll('.mobile-menu-link'));
+  const focusables = [menuBtn, ...links];
+  let lastFocused = null;
+  let scrollY = 0;
+
+  function isOpen() { return menu.classList.contains('open'); }
+
+  function setMenuOpen(open) {
+    if (open === isOpen()) return;
+    menuBtn.classList.toggle('open', open);
+    menu.classList.toggle('open', open);
+    menu.setAttribute('aria-hidden', String(!open));
+    menuBtn.setAttribute('aria-expanded', String(open));
+    menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+
+    if (open) {
+      lastFocused = document.activeElement;
+      scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
+      // Move focus in once the entrance transition has started.
+      setTimeout(() => { links[0] && links[0].focus({ preventScroll: true }); }, 60);
+    } else {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollY);
+      (lastFocused || menuBtn).focus({ preventScroll: true });
+    }
+  }
+
+  menuBtn.addEventListener('click', () => setMenuOpen(!isOpen()));
+
+  // Tapping empty space inside the overlay (not a link) closes it.
+  menu.addEventListener('click', (e) => {
+    if (e.target === menu || e.target.classList.contains('mobile-menu-bg') || e.target.closest('.mobile-menu-inner') === null) {
+      setMenuOpen(false);
+    }
+  });
+
+  links.forEach(a => {
+    a.addEventListener('click', () => setMenuOpen(false));
+    // Gradient "press" feedback for touch devices (no hover state available).
+    a.addEventListener('touchstart', () => a.classList.add('touch-active'), { passive: true });
+    a.addEventListener('touchend', () => a.classList.remove('touch-active'), { passive: true });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (!isOpen()) return;
+    if (e.key === 'Escape') { setMenuOpen(false); return; }
+    if (e.key !== 'Tab') return;
+    // Simple focus trap between the menu button and the links.
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault(); last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault(); first.focus();
+    }
+  });
+
+  // Close automatically if the viewport grows back to desktop size.
+  window.addEventListener('resize', () => {
+    if (isOpen() && window.innerWidth > 768) setMenuOpen(false);
+  });
+})();
 
 /* ==============================
    PARTICLE CANVAS
